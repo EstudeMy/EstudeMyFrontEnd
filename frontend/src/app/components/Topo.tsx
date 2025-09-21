@@ -4,7 +4,6 @@ import {Sidebar, Menu, MenuItem} from "react-pro-sidebar";
 import {Navbar, Nav, Container} from "react-bootstrap";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "@/app/components/Logo";
 import {
     List,
     Book,
@@ -247,7 +246,7 @@ const Topo = () => {
                                         width={24}
                                         height={24}
                                         src="/img/ConsultAi.png"
-                                        fill
+                                        
                                         alt="ConsultAI"
                                         className="object-contain"
                                         sizes="24px"
