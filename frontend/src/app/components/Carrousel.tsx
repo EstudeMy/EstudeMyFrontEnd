@@ -85,9 +85,9 @@ function Carrousel() {
   };
 
   return (
-    <>
-      <h2 className="flex justify-between mx-25">Continue</h2>
+    <div className="mx-15">
       <div className="flex flex-col items-center gap-4 p-4 rounded-xl w-full max-w-screen-xl mx-auto">
+        <h2 className="">Continue</h2>
         {/* ===============================
           Barra de navegação do carrossel
           =============================== */}
@@ -119,7 +119,7 @@ function Carrousel() {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

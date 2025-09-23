@@ -9,7 +9,7 @@ export default function Logo() {
                 <img
                     src="/EstudeMyLogo.svg" // Caminho do arquivo do logo
                     alt="Logo Estude.My"    // Texto alternativo para acessibilidade
-                    className="m-auto h-12 mt-4" // Centraliza horizontalmente e define altura
+                    className="m-auto h-12 mt-4 " // Centraliza horizontalmente e define altura
                 />
             </div>
         </>
