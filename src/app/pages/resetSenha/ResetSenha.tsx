@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 export default function ResetSenhaPage() {
   const router = useRouter();
-  const { token } = router.query; // pega o valor de ?token=XYZ
+  const { token } = router.query; // pega ?token=XYZ da URL
 
   return (
     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
