@@ -1,11 +1,14 @@
 "use client";
-import { useState } from "react";
 
-// Mock de imagens das fases
+import { useState } from "react";
+import Link from "next/link";
+import { Lock, Unlock } from "lucide-react";
+
+// Mock de fases
 const fases = [
-  { id: 1, nome: "Fase 1", img: "/fases/fase1.jpg" },
-  { id: 2, nome: "Fase 2", img: "/fases/fase2.jpg" },
-  { id: 3, nome: "Fase 3", img: "/fases/fase3.jpg" },
+  { id: 1, nome: "Trilha 1", img: "/fases/fase1.jpg", paga: false },
+  { id: 2, nome: "Trilha 2", img: "/fases/fase2.jpg", paga: true },
+  { id: 3, nome: "Trilha 3", img: "/fases/fase3.jpg", paga: false },
 ];
 
 // Lista de matérias
@@ -31,7 +34,7 @@ export default function CriarTrilha() {
     dificuldade: "Facil",
     disponibilidade: "Privado",
     pagamento: "Gratuita",
-    faseSelecionada: null as number | null, // id da fase selecionada
+    faseSelecionada: null as number | null,
   });
 
   const [erros, setErros] = useState<{ [key: string]: string }>({});
@@ -47,10 +50,7 @@ export default function CriarTrilha() {
     setTrilha((prev) => ({ ...prev, faseSelecionada: id }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Validação mínima
+  const validarTrilha = () => {
     const newErros: { [key: string]: string } = {};
     if (!trilha.titulo.trim()) newErros.titulo = "Título é obrigatório";
     if (!trilha.descricao.trim()) newErros.descricao = "Descrição é obrigatória";
@@ -58,21 +58,23 @@ export default function CriarTrilha() {
     if (trilha.faseSelecionada === null) newErros.faseSelecionada = "Selecione uma fase";
 
     setErros(newErros);
+    return Object.keys(newErros).length === 0;
+  };
 
-    if (Object.keys(newErros).length === 0) {
-      console.log("Dados da trilha:", trilha);
-      alert("Trilha criada com sucesso!");
-    }
+  const handleAvancar = () => {
+    if (!validarTrilha()) return; // se inválido, não avança
+    localStorage.setItem("trilha", JSON.stringify(trilha));
+    // A navegação será feita pelo <Link>
   };
 
   return (
-    <div className="items-center mx-auto bg-white p-6 mt-3">
-      <form className="w-full max-w-3xl space-y-6" onSubmit={handleSubmit}>
-        <h1 className="text-3xl font-bold">
-          <span className="text-blue-600">Criar nova</span>{" "}
-          <span className="text-pink-500">trilha</span>
-        </h1>
+    <div className="items-center mx-auto bg-white p-6 mt-3 max-w-3xl">
+      <h1 className="text-3xl font-bold mb-6">
+        <span className="text-blue-600">Criar nova</span>{" "}
+        <span className="text-pink-500">trilha</span>
+      </h1>
 
+      <div className="space-y-4">
         {/* Nome */}
         <div>
           <label className="block font-semibold mb-1">Nome da trilha</label>
@@ -103,7 +105,7 @@ export default function CriarTrilha() {
         {/* Datas */}
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
-            <label className="block font-semibold mb-1">Data de criação</label>
+            <label className="block font-semibold mb-1">Data de início</label>
             <input
               type="date"
               name="dataCriacao"
@@ -134,13 +136,9 @@ export default function CriarTrilha() {
               onChange={handleChange}
               className="w-full border rounded px-3 py-2"
             >
-              <option value="" disabled>
-                Selecione uma matéria
-              </option>
+              <option value="" disabled>Selecione uma matéria</option>
               {materias.map((m, i) => (
-                <option key={i} value={m}>
-                  {m}
-                </option>
+                <option key={i} value={m}>{m}</option>
               ))}
             </select>
             {erros.materia && <p className="text-red-500 text-sm mt-1">{erros.materia}</p>}
@@ -172,8 +170,7 @@ export default function CriarTrilha() {
                 checked={trilha.disponibilidade === "Privado"}
                 onChange={handleChange}
                 className="mr-1"
-              />
-              Privado
+              /> Privado
             </label>
             <label>
               <input
@@ -183,8 +180,7 @@ export default function CriarTrilha() {
                 checked={trilha.disponibilidade === "Aberto"}
                 onChange={handleChange}
                 className="mr-1"
-              />
-              Aberto
+              /> Aberto
             </label>
           </div>
           <div>
@@ -197,8 +193,7 @@ export default function CriarTrilha() {
                 checked={trilha.pagamento === "Paga"}
                 onChange={handleChange}
                 className="mr-1"
-              />
-              Paga
+              /> Paga
             </label>
             <label>
               <input
@@ -208,58 +203,55 @@ export default function CriarTrilha() {
                 checked={trilha.pagamento === "Gratuita"}
                 onChange={handleChange}
                 className="mr-1"
-              />
-              Gratuita
+              /> Gratuita
             </label>
           </div>
         </div>
 
-        {/* Carrossel de fases selecionável */}
-<div>
-  <p className="font-semibold mb-2">Fases da trilha</p>
-  {erros.faseSelecionada && (
-    <p className="text-red-500 text-sm mb-2">{erros.faseSelecionada}</p>
-  )}
-  <div className="flex overflow-x-auto gap-4 py-2">
-    {fases.map((fase) => {
-      const isSelected = trilha.faseSelecionada === fase.id;
-      return (
-        <div
-          key={fase.id}
-          className={`flex-shrink-0 w-40 h-40 border-4 rounded overflow-hidden relative cursor-pointer transition-transform ${
-            isSelected
-              ? "border-blue-600 scale-105 shadow-lg"
-              : "border-gray-300"
-          }`}
-          onClick={() => handleFaseClick(fase.id)}
-        >
-          <img
-            src={fase.img}
-            alt={fase.nome}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute bottom-0 w-full bg-black bg-opacity-50 text-white text-center py-1">
-            {fase.nome}
+        {/* Carrossel de fases */}
+        <div>
+          <p className="font-semibold mb-2">Fases da trilha</p>
+          {erros.faseSelecionada && <p className="text-red-500 text-sm mb-2">{erros.faseSelecionada}</p>}
+          <div className="flex overflow-x-auto gap-4 py-2">
+            {fases.map((fase) => {
+              const isSelected = trilha.faseSelecionada === fase.id;
+              return (
+                <div
+                  key={fase.id}
+                  onClick={() => handleFaseClick(fase.id)}
+                  className={`flex-shrink-0 w-40 h-40 border-4 rounded-xl overflow-hidden relative cursor-pointer transition-all duration-200 transform
+                    ${isSelected ? "border-blue-600 shadow-lg scale-105" : "border-gray-300 hover:scale-105 hover:shadow-md"}`}
+                >
+                  <img src={fase.img} alt={fase.nome} className="w-full h-full object-cover" />
+                  <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                    {fase.paga ? <Lock size={14} /> : <Unlock size={14} />}
+                    <span>{fase.paga ? "Paga" : "Gratuita"}</span>
+                  </div>
+                  <div className="absolute bottom-0 w-full bg-black/40 text-white text-center py-1 text-sm">
+                    {fase.nome}
+                  </div>
+                  {isSelected && (
+                    <span className="absolute bottom-2 right-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-md">
+                      Selecionado
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </div>
-          {isSelected && (
-            <span className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
-              Selecionado
-            </span>
-          )}
         </div>
-      );
-    })}
-  </div>
-</div>
 
-
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
-        >
-          Criar Trilha
-        </button>
-      </form>
+        {/* Botão Avançar */}
+        <Link href="/app/pages/criarFase">
+          <button
+            type="button"
+            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition mt-4"
+            onClick={handleAvancar}
+          >
+            Avançar
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }
