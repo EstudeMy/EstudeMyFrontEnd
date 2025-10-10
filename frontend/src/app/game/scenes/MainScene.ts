@@ -20,16 +20,19 @@ export default class MainScene extends Phaser.Scene {
   specialMeter: Phaser.GameObjects.Graphics[] = [];
   specialValue = 0;
 
+  perguntaAtual: any;
+
   perguntas = [
     { pergunta: "Qual é a capital do Brasil?", opcoes: ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador", "Fortaleza"], resposta: "Brasília" },
     { pergunta: "Qual é 2 + 2?", opcoes: ["3", "4", "5", "6", "7"], resposta: "4" },
     { pergunta: "Qual é a cor do céu?", opcoes: ["Verde", "Azul", "Vermelho", "Amarelo", "Preto"], resposta: "Azul" },
   ];
-  perguntaAtual: any;
 
   readonly LETRAS = ["A", "B", "C", "D", "E"];
 
-  constructor() { super("MainScene"); }
+  constructor() {
+    super("MainScene");
+  }
 
   preload() {
     this.load.image("background", "/img/background-image-login-register.png");
@@ -43,9 +46,9 @@ export default class MainScene extends Phaser.Scene {
       balaoX: width * 0.1,
       balaoY: height * 0.05,
       balaoWidth: width * 0.8,
-      balaoHeight: height * 0.35,
-      padding: width * 0.02,
-      opcoesGap: height * 0.07,
+      balaoHeight: height * 0.25,
+      padding: 20,
+      opcoesGap: 40,
       fontSize: Math.round(width * 0.02),
       btnFontSize: Math.round(width * 0.025),
       infoWidth: 150,
@@ -65,8 +68,8 @@ export default class MainScene extends Phaser.Scene {
     this.criarBaloesInfo();
     this.createPerguntaBalao();
     this.loadPergunta();
-    this.criarBotaoVoltar();
     this.criarBalaoAcoes();
+    this.criarBotaoVoltar();
 
     this.scale.on("resize", () => {
       this.reposicionarSprites();
@@ -77,6 +80,7 @@ export default class MainScene extends Phaser.Scene {
     });
   }
 
+  // ---------------- Background e Sprites ----------------
   createBackground() {
     const bg = this.add.image(0, 0, "background").setOrigin(0, 0);
     bg.setDisplaySize(this.scale.width, this.scale.height);
@@ -94,10 +98,10 @@ export default class MainScene extends Phaser.Scene {
     this.enemy.setPosition(width * 0.8, height * 0.8);
   }
 
+  // ---------------- Balões de Info ----------------
   criarBaloesInfo() {
     this.jogadorBalao = this.criarBalaoInfo(this.player, "Jogador", () => this.jogadorHP, () => this.jogadorMana);
     this.inimigoBalao = this.criarBalaoInfo(this.enemy, "Inimigo", () => this.inimigoHP, () => this.inimigoMana);
-
     this.jogadorBalao.setDepth(10);
     this.inimigoBalao.setDepth(10);
   }
@@ -134,23 +138,31 @@ export default class MainScene extends Phaser.Scene {
 
     this.events.on("update", atualizar);
     atualizar();
-
     return container;
   }
 
   atualizarBaloesInfo() {}
 
+  // ---------------- Balão de Pergunta ----------------
   createPerguntaBalao() {
     const l = this.layout;
+
+    // Balão
     this.balaoPergunta = this.add.graphics();
     this.balaoPergunta.fillStyle(0x222222, 0.85);
     this.balaoPergunta.fillRoundedRect(l.balaoX, l.balaoY, l.balaoWidth, l.balaoHeight, 16);
 
+    // Container para pergunta + opções
+    this.jogadorBalao = this.add.container(0, 0);
+
+    // Texto pergunta
     this.perguntaText = this.add.text(l.balaoX + l.padding, l.balaoY + l.padding, "Carregando pergunta...", {
       fontSize: `${l.fontSize}px`,
       color: "#fff",
       wordWrap: { width: l.balaoWidth - l.padding * 2 }
     });
+
+    this.jogadorBalao.add(this.perguntaText);
   }
 
   reposicionarBalao() {
@@ -171,22 +183,34 @@ export default class MainScene extends Phaser.Scene {
 
   renderOpcoes(opcoesArray: string[]) {
     const l = this.layout;
+
+    // Remove antigas
     this.opcoes.forEach(btn => btn.destroy());
     this.opcoes = [];
-    const startX = l.balaoX + l.padding;
-    const startY = l.balaoY + l.padding * 3;
 
-    opcoesArray.forEach((opcao, index) => {
-      const btn = this.add.text(startX, startY + index * l.opcoesGap, `${this.LETRAS[index]}: ${opcao}`, {
-        fontSize: `${l.fontSize}px`, color: "#fff", backgroundColor: "#333", padding: { x: 10, y: 6 },
+    const startY = l.balaoY + l.padding + this.perguntaText.height + 10;
+
+    const gap = (l.balaoHeight - this.perguntaText.height - 2 * l.padding) / opcoesArray.length;
+
+    opcoesArray.forEach((opcao, i) => {
+      const y = startY + gap * i;
+      const btn = this.add.text(l.balaoX + l.padding, y, `${this.LETRAS[i]}: ${opcao}`, {
+        fontSize: `${l.fontSize}px`,
+        color: "#fff",
+        backgroundColor: "#333",
+        padding: { x: 10, y: 6 },
         fixedWidth: l.balaoWidth - l.padding * 2
-      }).setInteractive({ useHandCursor: true }).on("pointerdown", () => this.verificarResposta(opcao));
+      })
+      .setInteractive({ useHandCursor: true })
+      .on("pointerdown", () => this.verificarResposta(opcao));
+
       this.opcoes.push(btn);
     });
   }
 
   verificarResposta(resposta: string) {
     this.opcoes.forEach(btn => btn.disableInteractive());
+
     if (resposta === this.perguntaAtual.resposta) {
       this.inimigoHP = Math.max(this.inimigoHP - Phaser.Math.Between(15, 25), 0);
       this.perguntaText.setText("✅ Acertou! Você atacou!");
@@ -197,6 +221,7 @@ export default class MainScene extends Phaser.Scene {
       this.perguntaText.setText("❌ Errou! O inimigo atacou!");
       this.animaAtaque(this.enemy, this.player);
     }
+
     if (this.jogadorHP <= 0 || this.inimigoHP <= 0) {
       this.time.delayedCall(1000, () => this.mostrarTelaFinal(this.jogadorHP <= 0 ? "derrota" : "vitoria"));
     } else {
@@ -208,56 +233,72 @@ export default class MainScene extends Phaser.Scene {
     this.tweens.add({ targets: atacante, x: alvo.x - 50, y: atacante.y - 20, duration: 300, yoyo: true, ease: "Power1" });
   }
 
+  // ---------------- Botão Voltar ----------------
   criarBotaoVoltar() {
     const l = this.layout;
     this.add.text(20, 20, "⬅ Voltar", {
       fontSize: `${l.btnFontSize}px`,
       color: "#fff",
       backgroundColor: "#333",
-      rounded: true,
       padding: { x: 10, y: 6 },
     }).setInteractive({ useHandCursor: true }).on("pointerdown", () => window.history.back());
   }
 
-  criarBalaoAcoes() {
-    const { width, height } = this.scale;
-    const l = this.layout;
-    this.acaoContainer = this.add.container(width * 0.2, height * 0.92);
+  // ---------------- Balão de Ações ----------------
+criarBalaoAcoes() {
+  const { width, height } = this.scale;
+  const l = this.layout;
 
-    const balao = this.add.graphics();
-    balao.fillStyle(0x222222, 0.85);
-    balao.fillRoundedRect(-l.acaoWidth / 2, -l.acaoHeight / 2, l.acaoWidth, l.acaoHeight, 12);
-    this.acaoContainer.add(balao);
+  // Container principal
+  this.acaoContainer = this.add.container(width * 0.2, height * 0.92);
 
-    const textos = ["❤️ Cura HP", "💧 Cura Mana", "✨ Restaurar"];
-    textos.forEach((txt, i) => {
-      const btn = this.add.text(-100 + i * 100, -20, txt, { fontSize: `${l.fontSize}px`, color: "#fff", backgroundColor: "#333", padding: { x: 10, y: 6 } })
-        .setInteractive({ useHandCursor: true }).on("pointerdown", () => this.usarAcao(txt));
-      this.acaoContainer.add(btn);
-    });
+  // Fundo do balão
+  const balao = this.add.graphics();
+  balao.fillStyle(0x222222, 0.85);
+  balao.fillRoundedRect(-l.acaoWidth / 2, -l.acaoHeight / 2, l.acaoWidth, l.acaoHeight, 12);
+  this.acaoContainer.add(balao);
 
-    // Container da barra de especial
-    const barraContainer = this.add.container(-l.acaoWidth / 2 + l.acaoPadding, 20);
-    this.acaoContainer.add(barraContainer);
+  // Botões
+  const textos = ["❤️ Cura HP", "💧 Cura Mana", "✨ Restaurar"];
+  const numBotoes = textos.length;
+  const gap = 10; // Espaço entre botões
+  const btnHeight = (l.acaoHeight - (gap * (numBotoes + 1))) / numBotoes;
 
-    // Criar gomos da barra especial
-    this.specialMeter = [];
-    const gomoWidth = 40;
-    const gomoHeight = 12;
-    const gap = l.specialGap;
-    for (let i = 0; i < 5; i++) {
-      const gomo = this.add.graphics();
-      gomo.fillStyle(0x555555, 1);
-      gomo.fillRect(i * (gomoWidth + gap), 0, gomoWidth, gomoHeight);
-      barraContainer.add(gomo);
-      this.specialMeter.push(gomo);
-    }
+  textos.forEach((txt, i) => {
+    const y = -l.acaoHeight / 2 + gap + i * (btnHeight + gap);
+    const btn = this.add.text(0, y, txt, {
+      fontSize: `${l.fontSize}px`,
+      color: "#fff",
+      backgroundColor: "#333",
+      padding: { x: 10, y: 6 },
+    }).setOrigin(0.5, 0) // centraliza horizontalmente
+      .setInteractive({ useHandCursor: true })
+      .on("pointerdown", () => this.usarAcao(txt));
+    this.acaoContainer.add(btn);
+  });
+
+  // Barra de especial
+  const barraContainer = this.add.container(-l.acaoWidth / 2 + l.acaoPadding, l.acaoHeight / 2 - 20);
+  this.acaoContainer.add(barraContainer);
+
+  this.specialMeter = [];
+  const gomoWidth = 40;
+  const gomoHeight = 12;
+  const gomoGap = l.specialGap;
+  for (let i = 0; i < 5; i++) {
+    const gomo = this.add.graphics();
+    gomo.fillStyle(0x555555, 1);
+    gomo.fillRect(i * (gomoWidth + gomoGap), 0, gomoWidth, gomoHeight);
+    barraContainer.add(gomo);
+    this.specialMeter.push(gomo);
   }
+}
 
-  reposicionarAcoes() {
-    const { width, height } = this.scale;
-    this.acaoContainer.setPosition(width * 0.2, height * 0.92);
-  }
+reposicionarAcoes() {
+  const { width, height } = this.scale;
+  this.acaoContainer.setPosition(width * 0.2, height * 0.92);
+}
+
 
   usarAcao(tipo: string) {
     switch (tipo) {
@@ -286,6 +327,7 @@ export default class MainScene extends Phaser.Scene {
     });
   }
 
+  // ---------------- Tela Final ----------------
   mostrarTelaFinal(tipo: "vitoria" | "derrota") {
     const { width, height } = this.scale;
     const overlay = this.add.rectangle(0, 0, width, height, 0x000000, 0.7).setOrigin(0, 0).setAlpha(0);
