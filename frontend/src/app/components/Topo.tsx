@@ -185,27 +185,12 @@ const Topo = () => {
                 >
 
                     {/* Item do menu para expandir/recolher */}
-                    <MenuItem
-                        icon={<List className="text-white" size={20}/>}
-                        onClick={() => {
-                            if (isMobile) {
-                                setSidebarToggled(false);
-                            } else {
-                                setCollapsed(!collapsed);
-                            }
-                        }}
-                        style={{
-                            textAlign: "center",
-                            padding: "10px 0",
-                            color: "white",
-                            marginBottom: "10px",
-                        }}
-                    >
-                        {(!collapsed || isMobile) && (
-                            <span className="text-white">{isMobile ? "MENU" : "MENU"}</span>
-                        )}
-                    </MenuItem>
-
+               
+                    <div style={
+                        {
+                            marginTop: "50px",
+                        }
+                    }>
                     {/* Lista dos itens do menu lateral */}
                     <div
                         style={{
@@ -228,6 +213,7 @@ const Topo = () => {
                                 {(!collapsed || isMobile) && item.label}
                             </MenuItem>
                         ))}
+                    </div>
                     </div>
 
                     {/* Item fixo no final do sidebar (ConsultAI) */}
@@ -293,10 +279,10 @@ const Topo = () => {
                         }}
                     >
                         {/* Logo do sistema */}
-                        <Link href="/" passHref legacyBehavior>
+                        <Link href="/" passHref>
                             <div
                                 style={{
-                                    marginLeft: isMobile ? "40px" : "80px",
+                                    marginLeft: isMobile ? "80px" : "80px",
                                     transition: "margin-left 0.3s",
                                     display: "flex",
                                     alignItems: "center",
@@ -305,13 +291,13 @@ const Topo = () => {
                             >
                                 <div
                                     style={{
-                                        transform: isMobile ? "scale(0.8)" : "scale(1)",
+                                        transform: isMobile ? "scale(0.7)" : "scale(1)",
                                         transformOrigin: "left center",
                                     }}
                                 >
                                     {/* Logo */}
                                     <div className="mb-6 text-center my-1">
-                                        <Image width={400} height={128} src="/svg/EstudeMyLogo.svg" alt="Logo"/>
+                                        <Image width={350} height={128} src="/svg/EstudeMyLogo.svg" alt="Logo"/>
                                     </div>
                                 </div>
                             </div>

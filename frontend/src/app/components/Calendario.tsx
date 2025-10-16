@@ -54,7 +54,7 @@ const CalendarPage = () => {
     }, []); // Executa apenas uma vez ao montar o componente
 
     return (
-        <div className="container mx-auto p-8 bg-slate-300">
+        <div className="container mx-auto p-8 bg-white max-w-9/12">
             {/* Título do calendário */}
             <h1 className="text-3xl font-bold mb-4 text-center">Calendário de Eventos</h1>
 

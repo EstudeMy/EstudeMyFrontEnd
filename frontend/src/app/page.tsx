@@ -2,15 +2,12 @@
 // Necessário para renderizar este componente no lado do cliente (usa animações e interatividade)
 
 import CoinRain from "@/app/components/CoinRain"; // Efeito visual de moedas caindo
-import {Jaro} from "next/font/google"; // Fonte personalizada
+
 import {motion} from "framer-motion"; // Biblioteca para animações
 import Image from "next/image";
 
 // Configuração da fonte Jaro
-const jaro = Jaro({
-    subsets: ["latin"],
-    weight: "400",
-});
+
 
 // Ícones e tooltips que aparecem na barra lateral
 const tooltips = [
@@ -43,7 +40,7 @@ export default function LandingPage() {
 
                         {/* Tooltip (aparece no hover) */}
                         <motion.div
-                            initial={{opacity: 0, x: -10}}
+                            initial={{opacity: 0, x: 0}}
                             whileHover={{opacity: 1, x: 0}}
                             transition={{duration: 0.3}}
                             className="absolute left-16 bg-[#9CC5EB] text-[#163043] px-4 py-2 rounded-md whitespace-nowrap text-md font-bold shadow-lg"
@@ -61,7 +58,7 @@ export default function LandingPage() {
                     {/* Logo */}
                     <div className="mb-6">
                         <Image
-                            width={400}
+                            width={550}
                             height={128}
                             src="/svg/EstudeMyLogo.svg"
                             alt="Logo Estude.My"

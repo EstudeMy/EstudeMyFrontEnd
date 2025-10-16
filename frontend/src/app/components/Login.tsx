@@ -17,7 +17,7 @@ const Login = () => {
         setErro('');
 
         try {
-            const res = await fetch('http://localhost:8080/api/usuarios/login', {
+            const res = await fetch('http://localhost:5000/api/usuarios/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -47,9 +47,10 @@ const Login = () => {
             style={{ backgroundImage: `url('/img/background-image-login-register.png')` }}
         >
             <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-                <div className="mb-6 text-center">
-                    <Image width={400} height={128} src="/svg/EstudeMyLogo.svg" alt="Logo" className="ml-11"/>
+               <div className="mb-6 text-center">
+                    <Image width={400} height={128} src="/svg/EstudeMyLogo.svg" alt="Logo" />
                 </div>
+                
 
                 <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                     <div className="flex flex-col">

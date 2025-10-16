@@ -22,8 +22,11 @@ export default function App() {
     const [tab, setTab] = useState("notifications"); // Estado para alternar entre "notifications" e "events"
 
     return (
-        <div className="max-w-md mx-auto bg-white min-h-screen p-2 relative mt-3">
-            {/* Tabs para alternar entre notificações e eventos */}
+    <div className="flex items-center justify-center p-4 m-auto">
+        {/* ===============================
+          Card principal da conta
+          =============================== */}
+        <div className="bg-white p-6 rounded shadow-md w-full mx-auto">
             <div className="flex justify-around border-b border-gray-300 mb-2">
                 <button
                     onClick={() => setTab("notifications")}
@@ -89,6 +92,7 @@ export default function App() {
                     ))}
                 </div>
             )}
-        </div>
+            </div>
+            </div>
     );
 }

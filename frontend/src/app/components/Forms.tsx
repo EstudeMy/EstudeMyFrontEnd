@@ -2,7 +2,12 @@ import Button from 'react-bootstrap/Button';
 
 const Form = () => {
     return (
-        <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md my-20">
+        <div className="flex items-center justify-center p-4 m-auto">
+        {/* ===============================
+          Card principal da conta
+          =============================== */}
+        <div className="bg-white p-6 rounded shadow-md w-full mx-auto">
+        
 
             {/* Título e descrição */}
             <h1 className="text-2xl font-bold text-gray-800 mb-4 text-center">Fale Conosco</h1>
@@ -67,6 +72,7 @@ const Form = () => {
                         contato@plataforma.com
                     </a>
                 </p>
+            </div>
             </div>
         </div>
     );
