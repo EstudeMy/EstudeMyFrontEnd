@@ -21,27 +21,27 @@ const CalendarPage = () => {
     // ===============================
     useEffect(() => {
         // Requisição para a API que retorna eventos
-        fetch('http://localhost:3000/api/events')
-            .then((response) => response.json())
-            .then((data) => {
-                // Formata os eventos para o FullCalendar
-                interface ApiEvent {
-                    title: string;
-                    date: string;
-                }
+            // fetch('http://localhost:3000/api/events')
+            //     .then((response) => response.json())
+            //     .then((data) => {
+            //         // Formata os eventos para o FullCalendar
+            //         interface ApiEvent {
+            //             title: string;
+            //             date: string;
+            //         }
 
-                interface CalendarEvent {
-                    title: string;
-                    date: string;
-                }
+            //         interface CalendarEvent {
+            //             title: string;
+            //             date: string;
+            //         }
 
-                const formattedEvents: CalendarEvent[] = (data as ApiEvent[]).map((event: ApiEvent) => ({
-                    title: event.title,
-                    date: format(new Date(event.date), 'yyyy-MM-dd') // FullCalendar exige data neste formato
-                }));
-                setEvents(formattedEvents); // Atualiza estado
-            })
-            .catch((error) => console.error('Erro ao carregar eventos:', error));
+            //         const formattedEvents: CalendarEvent[] = (data as ApiEvent[]).map((event: ApiEvent) => ({
+            //             title: event.title,
+            //             date: format(new Date(event.date), 'yyyy-MM-dd') // FullCalendar exige data neste formato
+            //         }));
+            //         setEvents(formattedEvents); // Atualiza estado
+            //     })
+            //     .catch((error) => console.error('Erro ao carregar eventos:', error));
 
         // ===============================
         // Evento de teste adicionado manualmente

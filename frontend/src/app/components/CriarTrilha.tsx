@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // ATUALIZADO: Importar o useRouter
 import { Lock, Unlock } from "lucide-react";
 
 // Mock de fases
@@ -25,6 +26,8 @@ const materias = [
 ];
 
 export default function CriarTrilha() {
+  const router = useRouter(); // ATUALIZADO: Instanciar o router
+
   const [trilha, setTrilha] = useState({
     titulo: "",
     descricao: "",
@@ -65,17 +68,20 @@ export default function CriarTrilha() {
     return Object.keys(newErros).length === 0;
   };
 
+  // ATUALIZADO: A função agora cuida da navegação
   const handleAvancar = () => {
-    if (!validarTrilha()) return; // se inválido, não avança
+    if (!validarTrilha()) return; // Se for inválido, para a execução aqui
+
+    // Se for válido, salva os dados e navega para a próxima página
     localStorage.setItem("trilha", JSON.stringify(trilha));
-    // A navegação será feita pelo <Link>
+    router.push("/app/pages/criarFase");
   };
 
   return (
     <div className="flex items-center justify-center p-4 m-auto">
       {/* ===============================
-          Card principal da conta
-          =============================== */}
+            Card principal da conta
+            =============================== */}
       <div className="bg-white p-6 rounded shadow-md w-full mx-auto">
         <h1 className="text-3xl font-bold mb-6">
           <span className="text-blue-600">Criar nova</span>{" "}
@@ -248,11 +254,11 @@ export default function CriarTrilha() {
                     key={fase.id}
                     onClick={() => handleFaseClick(fase.id)}
                     className={`flex-shrink-0 w-40 h-40 border-4 rounded-xl overflow-hidden relative cursor-pointer transition-all duration-200 transform
-                    ${
-                      isSelected
-                        ? "border-blue-600 shadow-lg scale-105"
-                        : "border-gray-300 hover:scale-105 hover:shadow-md"
-                    }`}
+                                        ${
+                                          isSelected
+                                            ? "border-blue-600 shadow-lg scale-105"
+                                            : "border-gray-300 hover:scale-105 hover:shadow-md"
+                                        }`}
                   >
                     <img
                       src={fase.img}
@@ -278,15 +284,14 @@ export default function CriarTrilha() {
           </div>
 
           {/* Botão Avançar */}
-          <Link href="/app/pages/criarFase">
-            <button
-              type="button"
-              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition mt-4"
-              onClick={handleAvancar}
-            >
-              Avançar
-            </button>
-          </Link>
+          {/* ATUALIZADO: Agora é só um botão, sem o Link */}
+          <button
+            type="button"
+            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition mt-4"
+            onClick={handleAvancar}
+          >
+            Avançar
+          </button>
         </div>
       </div>
     </div>

@@ -259,19 +259,19 @@ const Cadastrar = () => {
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             {tipoUsuario === "PROFESSOR" ? (
               // Layout de 2 colunas para professor
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+              (<div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
                 <div className="flex flex-col gap-3">{camposComuns}</div>
                 <div className="flex flex-col gap-3">
                   {camposProfessor}
                   {camposSenha}
                 </div>
-              </div>
+              </div>)
             ) : (
               // Layout de 1 coluna para aluno
-              <div className="flex flex-col gap-3">
+              (<div className="flex flex-col gap-3">
                 {camposComuns}
                 {camposSenha}
-              </div>
+              </div>)
             )}
 
             <Button type="submit" variant="primary" className="mt-2">

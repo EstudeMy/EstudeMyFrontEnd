@@ -38,10 +38,7 @@ nav ul li a {
     transition: 0.6s; /* Transição suave ao hover */
 }
 
-nav ul li a:hover {
-    background-color: #054fb1; /* Cor de fundo ao passar o mouse */
-    padding: 8px 20px; /* Ajuste de padding ao hover */
-}
+
 
 a:link {
     text-decoration: none; /* Remove sublinhado padrão dos links */

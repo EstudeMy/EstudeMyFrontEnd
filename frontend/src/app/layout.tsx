@@ -26,9 +26,9 @@ export default function RootLayout({
         // "suppressHydrationWarning" é usado para evitar erros de hidratação
         // quando o HTML do servidor e do cliente são ligeiramente diferentes
         <html lang="en" suppressHydrationWarning={true}>
-        <body>
-        {children} {/* Aqui todas as páginas/rotas serão renderizadas */}
-        </body>
+            <body>
+            {children} {/* Aqui todas as páginas/rotas serão renderizadas */}
+            </body>
         </html>
     );
 }

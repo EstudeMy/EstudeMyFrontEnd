@@ -68,7 +68,6 @@ export default function Quiz() {
 
     return (
         <main className="min-h-screen flex flex-col items-center justify-center ">
-
             {/* Quiz não finalizado */}
             {!finalizado ? (
                 <section className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-lg border border-gray-200">
@@ -153,7 +152,7 @@ export default function Quiz() {
                 </section>
             ) : (
                 // Quiz finalizado
-                <section
+                (<section
                     className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-lg border border-gray-200 text-center">
                     <div className="mb-6">
                         <h2 className="text-3xl font-bold text-gray-800 mb-4">
@@ -172,7 +171,6 @@ export default function Quiz() {
                                         : "Continue estudando e tente novamente!"}
                         </p>
                     </div>
-
                     {/* Barra de progresso final */}
                     <div className="mb-6">
                         <div className="w-full bg-gray-200 rounded-full h-4">
@@ -185,7 +183,6 @@ export default function Quiz() {
                             {Math.round((pontuacao / perguntas.length) * 100)}% de acertos
                         </p>
                     </div>
-
                     {/* Botão para voltar à trilha */}
                     <Button
                         href="/pages/trilha"
@@ -193,7 +190,7 @@ export default function Quiz() {
                     >
                         Voltar para trilha
                     </Button>
-                </section>
+                </section>)
             )}
         </main>
     );
