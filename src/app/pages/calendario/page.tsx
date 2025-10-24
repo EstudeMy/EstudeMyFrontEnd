@@ -1,5 +1,4 @@
 import React from 'react';
-import CalendarPage from '@/app/components/Calendario'; // Componente do calendário
 import Footer from '@/app/components/Footer';           // Componente do rodapé
 import Topo from '@/app/components/Topo';               // Componente do topo/navegação
 

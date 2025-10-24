@@ -1,7 +1,7 @@
 import Carrousel from "@/app/components/Carrousel"; // Componente carrossel de cursos
 import Footer from "@/app/components/Footer";       // Componente do rodapé
-import Topo from "@/app/components/Topo";           // Componente do topo/navegação
-
+import Topo from "@/app/components/Topo";      // Componente do topo/navegação
+import AppSidebar from "@/app/components/AppSidebar"; // Componente Sidebar
 export default function menuTrilhas() {
     return (
         <>
@@ -23,8 +23,8 @@ export default function menuTrilhas() {
                     {/* Estrutura principal da página */}
                     <div className="flex min-h-screen flex-col transition-all duration-300 justify-space-between">
 
-                        {/* Topo / Barra de navegação */}
-                        <Topo/>
+                        {/* Navs lateral e superior / Barra de navegação */}
+                        <Topo/>           
 
                         {/* Seção "Continue" */}
                         <div className="pt-3 w-full max-w-6xl mx-auto px-4">

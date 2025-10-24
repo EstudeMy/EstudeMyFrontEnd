@@ -1,6 +1,6 @@
 import Footer from "@/app/components/Footer";       // Componente do rodapé
 import "@/app/styles/style_perfil.css";           // Estilos específicos da página de perfil
-import Topo from "@/app/components/Topo";         // Componente do topo/navegação
+// import Topo from "@/app/components/Topo";         // Componente do topo/navegação
 import Link from "next/link";                     // Componente para navegação entre páginas
 import Image from "next/image";
 
@@ -26,7 +26,7 @@ export default function PerfilPage() {
                     <div className="flex flex-col min-h-screen">
 
                         {/* Topo / Barra de navegação */}
-                        <Topo/>
+                        {/* <Topo/> */}
 
                         {/* Conteúdo central da página */}
                         <div className="pt-3 w-full max-w-6xl mx-auto px-4">
@@ -73,3 +73,12 @@ export default function PerfilPage() {
         </>
     );
 }
+
+
+    // // Itens do dropdown "Mais"
+    // const dropdownItems = [
+    //     {href: "/pages/conta", label: "Conta"},
+    //     {href: "/pages/faleConosco", label: "Fale Conosco"},
+    //     {href: "/pages/faq", label: "FAQ"},
+    //     {href: "/", label: "Sair", variant: "danger"},
+    // ];

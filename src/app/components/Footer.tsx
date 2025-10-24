@@ -1,7 +1,7 @@
 const Footer = () => {
     return (
         // Footer com fundo escuro e texto cinza, padding vertical
-        <footer className="bg-slate-700 text-gray-300 py-6 mt-8">
+        <footer className="bg-slate-700 text-gray-800 py-6 mt-8">
             <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
 
                 {/* Copyright */}

@@ -1,104 +1,70 @@
 "use client";
-import React, {useState, useEffect} from "react";
-import {Sidebar, Menu, MenuItem} from "react-pro-sidebar";
-import {Navbar, Nav, Container} from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Navbar, Nav, Container, Form, FormControl, Button } from "react-bootstrap"; // Importando Form, FormControl e Button
 import Link from "next/link";
 import Image from "next/image";
-import {
-    List,
-    Book,
-    BarChart,
-    BookmarkFill,
-    Envelope,
-    BackpackFill,
-    HouseDoor,
-    Person,
-    ThreeDots,
-    Gear,
-    Cart,
-} from "react-bootstrap-icons";
+import { List, HouseDoor, Person, Gear, Search } from "react-bootstrap-icons"; // Importando o ícone Search
+import AppSidebar from "./AppSidebar"; // Certifique-se de que o caminho está correto
 
 // Componente principal do topo/navegação
 const Topo = () => {
-    // Estados para controlar o comportamento do menu lateral e navbar
-    const [collapsed, setCollapsed] = useState(true); // Sidebar recolhida ou não
-    const [sidebarToggled, setSidebarToggled] = useState(false); // Sidebar aberta no mobile
-    const [navbarToggled, setNavbarToggled] = useState(false); // Navbar aberta no mobile
-    const [showDropdown, setShowDropdown] = useState(false); // Dropdown "Mais" visível
-    const [isMobile, setIsMobile] = useState(false); // Se está em tela mobile
+    // ... Estados de controle existentes ...
+    const [collapsed, setCollapsed] = useState(true);
+    const [sidebarToggled, setSidebarToggled] = useState(false);
+    const [navbarToggled, setNavbarToggled] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    
+    // NOVO: Estado para a barra de pesquisa
+    const [searchTerm, setSearchTerm] = useState("");
 
     // Hook para detectar se está em tela mobile
     useEffect(() => {
         const checkMobile = () => {
             setIsMobile(window.innerWidth < 992);
+            if (window.innerWidth >= 992) {
+                setSidebarToggled(false);
+            }
         };
 
         checkMobile();
+
         window.addEventListener("resize", checkMobile);
 
         return () => window.removeEventListener("resize", checkMobile);
     }, []);
 
-    // Dados dos menus laterais (sidebar)
-    const sidebarItems = [
-        {
-            icon: <Book size={18}/>,
-            label: "Meus Cursos",
-            href: "/pages/meusCursos",
-        },
-        {icon: <BarChart size={18}/>, label: "Ranking", href: "/pages/ranking"},
-        {
-            icon: <BookmarkFill size={18}/>,
-            label: "Lições Salvas",
-            href: "/pages/salvas",
-        },
-        {
-            icon: <Envelope size={18}/>,
-            label: "Caixa de Entrada",
-            href: "/pages/mensagens",
-        },
-        {
-            icon: <BackpackFill size={18}/>,
-            label: "Criar Trilhas",
-            href: "/pages/criarTrilha",
-        },
-        {
-            icon: <Cart size={18}/>,
-            label: "Loja",
-            href: "/pages/loja",
-        },
-    ];
-
     // Dados dos menus superiores (navbar)
     const navItems = [
         {
             href: "/pages/home",
-            icon: <HouseDoor size={18}/>,
+            icon: <HouseDoor size={18} />,
             label: "Home",
         },
-        {href: "/pages/perfil", icon: <Person size={18}/>, label: "Perfil"},
+        { href: "/pages/perfil", icon: <Person size={18} />, label: "Perfil" },
         {
             href: "/pages/configuracoes",
-            icon: <Gear size={18}/>,
+            icon: <Gear size={18} />,
             label: "Configurações",
         },
     ];
-
-    // Itens do dropdown "Mais"
-    const dropdownItems = [
-        {href: "/pages/conta", label: "Conta"},
-        {href: "/pages/calendario", label: "Calendário"},
-        {href: "/pages/faleConosco", label: "Fale Conosco"},
-        {href: "/pages/faq", label: "FAQ"},
-        {href: "/", label: "Sair", variant: "danger"},
-    ];
-
-    // Fecha o sidebar ao clicar em um link no mobile
-    const handleSidebarLinkClick = () => {
-        if (isMobile) {
-            setSidebarToggled(false);
+    
+    // NOVO: Função para lidar com a pesquisa
+    const handleSearchSubmit = (event) => {
+        event.preventDefault(); // Impede o recarregamento da página
+        if (searchTerm.trim() !== "") {
+            // Aqui você faria a lógica de pesquisa:
+            // Ex: Router.push(`/search?q=${searchTerm}`);
+            console.log("Pesquisando por:", searchTerm);
+            // Opcional: Limpar o campo após a pesquisa
+            // setSearchTerm(""); 
         }
     };
+
+    const contentMarginLeft = isMobile
+        ? "0px"
+        : collapsed
+        ? "80px"
+        : "280px";
 
     return (
         <div className="flex">
@@ -125,153 +91,26 @@ const Topo = () => {
                     }}
                     aria-label="Toggle Sidebar"
                 >
-                    <List size={16}/>
+                    <List size={16} />
                 </button>
             )}
 
-            {/* Fundo escuro ao abrir o sidebar no mobile */}
-            {isMobile && sidebarToggled && (
-                <div
-                    style={{
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
-                        zIndex: 999,
-                    }}
-                    onClick={() => setSidebarToggled(false)}
-                />
-            )}
-
-            {/* Sidebar lateral (menu principal) */}
-            <Sidebar
-                collapsed={isMobile ? false : collapsed}
-                toggled={false}
-                onMouseEnter={() => !isMobile && setCollapsed(false)}
-                onMouseLeave={() => !isMobile && setCollapsed(true)}
-                width={isMobile ? "280px" : "280px"}
-                rootStyles={{
-                    height: "100vh",
-                    position: "fixed",
-                    zIndex: 1000,
-                    backgroundColor: "#007aff",
-                    overflow: "hidden",
-                    transform:
-                        isMobile && !sidebarToggled ? "translateX(-100%)" : "translateX(0)",
-                    transition: "transform margin-left 0.3s",
-                    "& > div": {
-                        backgroundColor: "#007aff",
-                        overflow: "hidden !important",
-                        "& ul": {
-                            height: "100%",
-                            overflow: "hidden",
-                        },
-                    },
-                }}
-            >
-                {/* Menu do sidebar */}
-                <Menu
-                    menuItemStyles={{
-                        button: {
-                            transition: "all 0.2s ease-in-out",
-                            "&:hover": {
-                                backgroundColor: "#0063cc",
-                                transform: "scale(0.95)",
-                            },
-                        },
-                    }}
-                >
-
-                    {/* Item do menu para expandir/recolher */}
-                    <MenuItem
-                        icon={<List className="text-white" size={20}/>}
-                        onClick={() => {
-                            if (isMobile) {
-                                setSidebarToggled(false);
-                            } else {
-                                setCollapsed(!collapsed);
-                            }
-                        }}
-                        style={{
-                            textAlign: "center",
-                            padding: "10px 0",
-                            color: "white",
-                            marginBottom: "10px",
-                        }}
-                    >
-                        {(!collapsed || isMobile) && (
-                            <span className="text-white">{isMobile ? "MENU" : "MENU"}</span>
-                        )}
-                    </MenuItem>
-
-                    {/* Lista dos itens do menu lateral */}
-                    <div
-                        style={{
-                            height: "calc(100vh - 120px)",
-                            overflowY: "auto",
-                            scrollbarWidth: "none",
-                        }}
-                    >
-                        {sidebarItems.map((item, index) => (
-                            <MenuItem
-                                key={index}
-                                icon={<div className="text-white">{item.icon}</div>}
-                                component={<Link href={item.href}/>}
-                                onClick={handleSidebarLinkClick}
-                                style={{
-                                    padding: "8px 15px",
-                                    color: "white",
-                                }}
-                            >
-                                {(!collapsed || isMobile) && item.label}
-                            </MenuItem>
-                        ))}
-                    </div>
-
-                    {/* Item fixo no final do sidebar (ConsultAI) */}
-                    <div
-                        style={{
-                            position: "absolute",
-                            bottom: 0,
-                            width: "100%",
-                            backgroundColor: "#007aff",
-                        }}
-                    >
-                        <MenuItem
-                            icon={
-                                <div className="w-6 h-6 relative">
-                                    <Image
-                                        width={24}
-                                        height={24}
-                                        src="/img/ConsultAi.png"
-                                        
-                                        alt="ConsultAI"
-                                        className="object-contain"
-                                        sizes="24px"
-                                    />
-                                </div>
-                            }
-                            component={<Link href="/pages/consultAi"/>}
-                            onClick={handleSidebarLinkClick}
-                            style={{
-                                padding: "8px 15px",
-                                color: "white",
-                            }}
-                        >
-                            {(!collapsed || isMobile) && "ConsultAI"}
-                        </MenuItem>
-                    </div>
-                </Menu>
-            </Sidebar>
+            {/* Componente Sidebar Separado */}
+            <AppSidebar
+                collapsed={collapsed}
+                sidebarToggled={sidebarToggled}
+                isMobile={isMobile}
+                setCollapsed={setCollapsed}
+                setSidebarToggled={setSidebarToggled}
+            />
 
             {/* Conteúdo principal e navbar superior */}
             <div
                 style={{
-                    marginLeft: isMobile ? "0px" : collapsed ? "0px" : "00px",
+                    marginLeft: contentMarginLeft, 
                     transition: "margin-left 0.3s",
-                    width: "100%",
+                    width: `calc(100% - ${contentMarginLeft})`,
+                    flexGrow: 1,
                 }}
             >
                 {/* Navbar superior */}
@@ -296,7 +135,7 @@ const Topo = () => {
                         <Link href="/" passHref legacyBehavior>
                             <div
                                 style={{
-                                    marginLeft: isMobile ? "40px" : "80px",
+                                    marginLeft: isMobile ? "40px" : "15px",
                                     transition: "margin-left 0.3s",
                                     display: "flex",
                                     alignItems: "center",
@@ -311,7 +150,7 @@ const Topo = () => {
                                 >
                                     {/* Logo */}
                                     <div className="mb-6 text-center my-1">
-                                        <Image width={400} height={128} src="/svg/EstudeMyLogo.svg" alt="Logo"/>
+                                        <Image width={400} height={128} src="/svg/EstudeMyLogo.svg" alt="Logo" />
                                     </div>
                                 </div>
                             </div>
@@ -330,8 +169,34 @@ const Topo = () => {
                             <span className="navbar-toggler-icon"></span>
                         </Navbar.Toggle>
 
-                        {/* Itens do menu superior */}
+                        {/* Itens do menu superior e Barra de Pesquisa */}
                         <Navbar.Collapse id="top-navbar" className="justify-content-end">
+
+                            {/* NOVO: Barra de Pesquisa (Posicionada à esquerda do menu de navegação) */}
+                            <Form 
+                                className="d-flex my-2 my-lg-0 me-auto ms-lg-4" 
+                                onSubmit={handleSearchSubmit}
+                                style={{ flexGrow: isMobile ? 1 : 0.5, maxWidth: "450px" }}
+                            >
+                                <FormControl
+                                    type="search"
+                                    placeholder="Pesquisar lições, trilhas..."
+                                    className="me-2"
+                                    aria-label="Search"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    style={{ height: isMobile ? "300px" : "38px" }}
+                                />
+                                <Button 
+                                    variant="outline-primary" 
+                                    type="submit"
+                                    style={{ height: isMobile ? "32px" : "38px", padding: isMobile ? "4px 8px" : "6px 12px" }}
+                                >
+                                <Search size={isMobile ? 16 : 18} />
+                                </Button>
+                            </Form>
+
+
                             <Nav
                                 as="ul"
                                 className="item-menu-central"
@@ -362,67 +227,12 @@ const Topo = () => {
                                         </Link>
                                     </Nav.Item>
                                 ))}
-
-                                {/* Dropdown "Mais" (aparece só no desktop) */}
-                                {!isMobile && (
-                                    <Nav.Item as="li" className="dropdown-container">
-                                        <div
-                                            className="dropdown-toggle"
-                                            onMouseEnter={() => setShowDropdown(true)}
-                                            onMouseLeave={() => setShowDropdown(false)}
-                                            style={{cursor: "pointer"}}
-                                        >
-                                            <div className="d-flex align-items-center nav-link2">
-                                                <ThreeDots className="me-2"/>
-                                                Mais
-                                            </div>
-
-                                            {/* Itens do dropdown */}
-                                            {showDropdown && (
-                                                <div className="custom-dropdown">
-                                                    {dropdownItems.map((item, index) => (
-                                                        <Link
-                                                            href={item.href}
-                                                            key={index}
-                                                            className={`dropdown-item ${
-                                                                item.variant === "danger" ? "text-danger" : ""
-                                                            }`}
-                                                            onClick={() => setShowDropdown(false)}
-                                                        >
-                                                            {item.label}
-                                                        </Link>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </Nav.Item>
-                                )}
-
-                                {/* Itens do dropdown "Mais" (aparecem direto no mobile) */}
-                                {isMobile &&
-                                    dropdownItems.map((item, index) => (
-                                        <Nav.Item as="li" key={`mobile-${index}`}>
-                                            <Link href={item.href} passHref legacyBehavior>
-                                                <Nav.Link
-                                                    className={`d-flex align-items-center ${
-                                                        item.variant === "danger" ? "text-danger" : ""
-                                                    }`}
-                                                    onClick={() => setNavbarToggled(false)}
-                                                    style={{
-                                                        padding: isMobile ? "4px 8px" : "8px 12px",
-                                                        fontSize: isMobile ? "0.85rem" : "1rem",
-                                                        minHeight: isMobile ? "32px" : "auto",
-                                                    }}
-                                                >
-                                                    {item.label}
-                                                </Nav.Link>
-                                            </Link>
-                                        </Nav.Item>
-                                    ))}
                             </Nav>
                         </Navbar.Collapse>
                     </Container>
                 </Navbar>
+                
+                {/* Conteúdo da página */}
             </div>
         </div>
     );
